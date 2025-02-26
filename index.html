@@ -75,50 +75,78 @@
 <body>
     <div class="container">
         <div class="progress-bar">
-            <div class="avatar">US</div>
+            <div class="avatar" id="avatar1">US</div>
             <div class="progress">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
-            <div class="avatar">US</div>
+            <div class="avatar" id="avatar2">US</div>
         </div>
-        <div class="info">Дней вместе: <span id="daysTogether">366</span></div>
-        <div class="info">Прогресс до 1000 дней</div>
-        <div class="info time">Мое время: <span id="myTime">16:08:51</span></div>
-        <div class="info time">Время партнера: <span id="partnerTime">02:08:51</span></div>
-        <div class="info">Расстояние: <span id="distance">8756 км</span></div>
+        <div class="info">Дней вместе: <span id="daysTogether">0</span></div>
+        <div class="info">Прогресс до <span id="progressGoal">0</span> дней</div>
+        <div class="info time">Мое время: <span id="myTime">00:00:00</span></div>
+        <div class="info time">Время партнера: <span id="partnerTime">00:00:00</span></div>
+        <div class="info">Расстояние: <span id="distance">0 км</span></div>
     </div>
 
     <script>
-        // Получаем данные из URL (или используем заглушки для примера)
+        // Получаем user_id из URL
         const urlParams = new URLSearchParams(window.location.search);
         const userId = urlParams.get('user_id');
 
-        // Используем фиксированные данные, как на скриншоте
-        const dummyData = {
-            days_together: 366,
-            progress_goal: 1000,
-            distance: 8756 км // Расстояние в км
-        };
+        // Функция для загрузки данных с сервера
+        async function loadUserData() {
+            try {
+                // Здесь предполагается, что данные доступны по этому URL
+                // В реальном проекте замените на ваш серверный эндпоинт
+                const response = await fetch(`https://t.me/cooldou_day_bot/app`);
+                const data = await response.json();
+                
+                // Получаем данные для конкретного пользователя
+                const userData = data[userId] || {
+                    days_together: 0,
+                    progress_goal: 1000,
+                    username1: "US",
+                    username2: "US",
+                    distance: 0
+                };
 
-        // Обновляем интерфейс данными
-        document.getElementById('daysTogether').textContent = dummyData.days_together;
-        document.getElementById('distance').textContent = `${dummyData.distance} км`;
+                // Обновляем интерфейс данными
+                document.getElementById('daysTogether').textContent = userData.days_together;
+                document.getElementById('progressGoal').textContent = userData.progress_goal;
+                document.getElementById('distance').textContent = `${userData.distance} км`;
 
-        // Устанавливаем прогресс-бар (36.6% заполнения, поскольку 366 / 1000 = 0.366)
-        const progress = (dummyData.days_together / dummyData.progress_goal) * 100;
-        document.getElementById('progressFill').style.width = `${progress}%`;
+                // Устанавливаем прогресс-бар
+                const progress = (userData.days_together / userData.progress_goal) * 100;
+                document.getElementById('progressFill').style.width = `${progress}%`;
 
-        // Обновление времени (как на скриншоте)
-        function updateTime() {
-            const now = new Date();
-            const myTime = '16:08:51'; // Фиксированное время, как на скриншоте
-            const partnerTime = '02:08:51'; // Фиксированное время партнера
-            document.getElementById('myTime').textContent = myTime;
-            document.getElementById('partnerTime').textContent = partnerTime;
+                // Обновляем аватары (используем имена или юزернеймы для инициалов)
+                const username1 = userData.username1 || "US";
+                const username2 = userData.username2 || "US";
+                document.getElementById('avatar1').textContent = username1.charAt(0) + (username2.charAt(0) || '');
+                document.getElementById('avatar2').textContent = username2.charAt(0) + (username1.charAt(0) || '');
+
+                // Обновляем время (для примера фиксированное, как на скриншоте)
+                function updateTime() {
+                    document.getElementById('myTime').textContent = '16:08:51';
+                    document.getElementById('partnerTime').textContent = '02:08:51';
+                }
+                updateTime();
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+                // В случае ошибки показываем заглушки
+                document.getElementById('daysTogether').textContent = 0;
+                document.getElementById('progressGoal').textContent = 1000;
+                document.getElementById('distance').textContent = '0 км';
+                document.getElementById('progressFill').style.width = '0%';
+                document.getElementById('avatar1').textContent = 'US';
+                document.getElementById('avatar2').textContent = 'US';
+                document.getElementById('myTime').textContent = '00:00:00';
+                document.getElementById('partnerTime').textContent = '00:00:00';
+            }
         }
 
-        // Обновляем время сразу (без интервала, так как на скриншоте фиксированное время)
-        updateTime();
+        // Загружаем данные при старте
+        loadUserData();
     </script>
 </body>
 </html>
