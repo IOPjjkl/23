@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прогресс пары</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body {
+            background-color: #ffe5ec;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            justify-content: center;
+        }
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #999;
+            margin: 0 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+            font-weight: bold;
+        }
+        .progress {
+            width: 200px;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            flex-grow: 1;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #ff4d6d;
+            border-radius: 10px;
+        }
+        .info {
+            margin: 10px 0;
+            text-align: center;
+            color: #ff4d6d;
+            font-size: 16px;
+            padding: 10px;
+            border: 2px solid #ff4d6d;
+            border-radius: 10px;
+            background-color: rgba(255, 77, 109, 0.1);
+        }
+        .time {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress-bar">
+            <div class="avatar">US</div>
+            <div class="progress">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="avatar">US</div>
+        </div>
+        <div class="info">Дней вместе: <span id="daysTogether">366</span></div>
+        <div class="info">Прогресс до 1000 дней</div>
+        <div class="info time">Мое время: <span id="myTime">16:08:51</span></div>
+        <div class="info time">Время партнера: <span id="partnerTime">02:08:51</span></div>
+        <div class="info">Расстояние: <span id="distance">8756 км</span></div>
+    </div>
+
+    <script>
+        // Получаем данные из URL (или используем заглушки для примера)
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('user_id');
+
+        // Используем фиксированные данные, как на скриншоте
+        const dummyData = {
+            days_together: 366,
+            progress_goal: 1000,
+            distance: 8756 км // Расстояние в км
+        };
+
+        // Обновляем интерфейс данными
+        document.getElementById('daysTogether').textContent = dummyData.days_together;
+        document.getElementById('distance').textContent = `${dummyData.distance} км`;
+
+        // Устанавливаем прогресс-бар (36.6% заполнения, поскольку 366 / 1000 = 0.366)
+        const progress = (dummyData.days_together / dummyData.progress_goal) * 100;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+
+        // Обновление времени (как на скриншоте)
+        function updateTime() {
+            const now = new Date();
+            const myTime = '16:08:51'; // Фиксированное время, как на скриншоте
+            const partnerTime = '02:08:51'; // Фиксированное время партнера
+            document.getElementById('myTime').textContent = myTime;
+            document.getElementById('partnerTime').textContent = partnerTime;
+        }
+
+        // Обновляем время сразу (без интервала, так как на скриншоте фиксированное время)
+        updateTime();
+    </script>
+</body>
+</html>
